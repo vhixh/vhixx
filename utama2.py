@@ -25,6 +25,18 @@ import os
 nltk.download('stopwords')
 nltk.download('punkt')
 
+import nltk
+
+# Cek dan download tokenizer 'punkt' jika belum tersedia
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
 #======================================================================================================
 
 
