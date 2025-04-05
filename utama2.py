@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title="Analisis Sentimen Aplikasi")
+st.set_page_config(page_title="Aplikasi Analisis Sentimen Ulasan Pengguna Transportasi Online pada Google Play")
 
 import pandas as pd
 import numpy as np
