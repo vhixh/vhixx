@@ -354,7 +354,7 @@ elif selected =="Analisis Data":
             df['text_StopWord'] = df['text_casefolding'].apply(
                 lambda x: ' '.join([word for word in x.split() if word not in stopwords_list])
             )
-            df['text_tokens'] = df['text_StopWord'].apply(lambda x: word_tokenize(x))
+            df['text_tokens'] = df['text_StopWord'].apply(lambda x: word_tokenize(str(x)))
 
             factory = StemmerFactory()
             stemmer = factory.create_stemmer()
