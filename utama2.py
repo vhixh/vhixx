@@ -1,6 +1,7 @@
-import nltk
-nltk.download('punkt')
 import streamlit as st
+
+st.set_page_config(page_title="Analisis Sentimen Aplikasi")
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
