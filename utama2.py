@@ -5,8 +5,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import nltk
-
-
 from streamlit_option_menu import option_menu
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -26,12 +24,8 @@ from PIL import Image
 import time
 import os
 
-import os
-import nltk
 
-# Setting path nltk_data
-nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
-nltk.data.path.append(nltk_data_path)
+nltk.data.path.append('./nltk_data')
 #======================================================================================================
 
 
