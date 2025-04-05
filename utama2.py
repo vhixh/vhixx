@@ -22,15 +22,9 @@ from PIL import Image
 import time
 import os
 
-
-# Cek apakah stopwords sudah diunduh
-import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
 
-
-# Download stopwords from NLTK
-nltk.download('stopwords')  
 
 #======================================================================================================
 
