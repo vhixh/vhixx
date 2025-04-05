@@ -26,19 +26,12 @@ from PIL import Image
 import time
 import os
 
+import os
 import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
-import nltk
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
 
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
+# Setting path nltk_data
+nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
+nltk.data.path.append(nltk_data_path)
 #======================================================================================================
 
 
