@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import nltk
+
 from streamlit_option_menu import option_menu
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -21,22 +21,10 @@ import csv
 from PIL import Image
 import time
 import os
-
-nltk.download('stopwords')
-nltk.download('punkt')
-
 import nltk
 
-# Cek dan download tokenizer 'punkt' jika belum tersedia
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
-
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('stopwords')
 #======================================================================================================
 
 
