@@ -3,8 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
+
 
 from streamlit_option_menu import option_menu
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -25,7 +24,9 @@ from PIL import Image
 import time
 import os
 
-
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
 #======================================================================================================
 
 
