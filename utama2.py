@@ -546,16 +546,16 @@ elif selected =="Transportasi Online":
     """)
 
     # Path ke folder tempat file disimpan
-    folder_path = "D:/apps/data"
+    folder_path = "data/"
 
     # Daftar file CSV di folder dengan placeholder
-    files_available = ["⬜ Pilih File..."] + [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+    files_available = ["Pilih File..."] + [f for f in os.listdir(folder_path) if f.endswith('.csv')]
 
     # Pilih file untuk dianalisis
     selected_file = st.selectbox("Pilih file untuk dianalisis:", files_available)
 
     # Validasi jika pengguna belum memilih file
-    if selected_file != "⬜ Pilih File...":
+    if selected_file != "Pilih File...":
         st.session_state.selected_file = selected_file  # simpan file ke session state
 
     if "selected_file" in st.session_state and st.session_state.selected_file != "⬜ Pilih File...":
