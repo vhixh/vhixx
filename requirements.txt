@@ -9,3 +9,4 @@ google-play-scraper
 streamlit-option-menu
 sastrawi
 pillow
+xlsxwriter
