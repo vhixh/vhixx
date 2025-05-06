@@ -26,7 +26,7 @@ import time
 import os
 
 
-nltk.data.path.append('/path/to/nltk_data')
+nltk.data.append('/to/nltk_data')
 #======================================================================================================
 
 st.markdown("""
