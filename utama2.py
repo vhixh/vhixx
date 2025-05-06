@@ -23,24 +23,22 @@ import time
 import os
 
 
-# Cek apakah stopwords sudah diunduh
 import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
+from nltk.tokenize import word_tokenize
 
-import nltk
+# Pastikan path nltk_data lokal digunakan
+nltk.data.path.append('/mount/src/vhixx/nltk_data')
+
+# Download resource jika belum tersedia
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    nltk.download('punkt')
+    nltk.download('punkt', download_dir='/mount/src/vhixx/nltk_data')
+    nltk.download('punkt_tab', download_dir='/mount/src/vhixx/nltk_data')
+    nltk.download('nonbreaking_prefixes', download_dir='/mount/src/vhixx/nltk_data')
 
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
-#=====================================================================================================
-nltk.download('punkt', download_dir='/mount/src/vhixx/nltk_data')
-nltk.data.path.append('/mount/src/vhixx/nltk_data')
+# Misalnya, untuk pemrosesan DataFrame
+# df['text_tokens'] = df['text_StopWord'].apply(lambda x: word_tokenize(x, language='indonesian'))
 
 
 
