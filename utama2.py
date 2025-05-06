@@ -22,32 +22,8 @@ from PIL import Image
 import time
 import os
 
-
-# import nltk  # dinonaktifkan
-# from nltk.tokenize import TreebankWordTokenizer  # dinonaktifkan
-
-# Pastikan path nltk_data lokal digunakan
-nltk.data.path.append('/mount/src/vhixx/nltk_data')
-
-# Download resource jika belum tersedia
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt', download_dir='/mount/src/vhixx/nltk_data')
-    nltk.download('punkt_tab', download_dir='/mount/src/vhixx/nltk_data')
-    nltk.download('nonbreaking_prefixes', download_dir='/mount/src/vhixx/nltk_data')
-
-# Misalnya, untuk pemrosesan DataFrame
-# df['text_tokens'] = 
-# Daftar stopwords lokal Bahasa Indonesia
-stop_words = set([
-    "yang", "dan", "di", "ke", "dari", "ini", "itu", "dengan", "untuk", "pada",
-    "adalah", "sebagai", "juga", "karena", "oleh", "atau", "saat", "agar", "tidak",
-    "dalam", "sudah", "masih", "hanya", "saja", "akan", "bisa", "kami", "kita", "mereka",
-    "saya", "anda", "dia", "itu", "ini", "apa", "siapa", "dimana", "mengapa", "bagaimana"
-])
-
-
+nltk.download('stopwords')
+nltk.download('punkt')
 
 
 
