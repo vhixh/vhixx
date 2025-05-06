@@ -100,7 +100,7 @@ if selected =='Home':
 
     def home_page():
    
-        st.image("/11.png", use_container_width=True)
+        st.image("11.png", use_container_width=True)
 
         # Membuat tata letak dua kolom
         col1, col2 = st.columns([1, 2])
@@ -178,7 +178,7 @@ if selected =='Home':
 elif selected =="Scraping Data":
 
     # Judul aplikasi
-    st.image("/22.png", use_container_width=True)
+    st.image("22.png", use_container_width=True)
 
     # Penjelasan fitur scraping
     st.subheader("Langkah-Langkah Scraping Ulasan")
@@ -316,7 +316,7 @@ elif selected =="Analisis Data":
     if "analysis_started" not in st.session_state:
         st.session_state.analysis_started = False
 
-    st.image("/33.png", use_container_width=True)
+    st.image("33.png", use_container_width=True)
 
     # Langkah-langkah Analisis
     st.markdown("""
@@ -465,7 +465,7 @@ elif selected =="Analisis Data":
 elif selected =="Visualisasi Data":
 
     # Judul aplikasi
-    st.image("/44.png", use_container_width=True)
+    st.image("44.png", use_container_width=True)
 
     # Jika belum ada di session state, set default
     if "visualization_started" not in st.session_state:
@@ -546,7 +546,7 @@ elif selected =="Transportasi Online":
         st.session_state.analysis_started = False
 
     # Judul aplikasi
-    st.image("/55.png", use_container_width=True)
+    st.image("55.png", use_container_width=True)
 
     st.markdown("""
     ### **Langkah-Langkah Analisis dan Visualisasi Data Ulasan**
