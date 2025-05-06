@@ -566,7 +566,7 @@ elif selected =="Transportasi Online":
     """)
 
     # Path ke folder tempat file disimpan
-    folder_path = "D:/apps/data"
+    folder_path = "data"
 
     # Daftar file CSV di folder dengan placeholder
     files_available = ["⬜ Pilih File..."] + [f for f in os.listdir(folder_path) if f.endswith('.csv')]
