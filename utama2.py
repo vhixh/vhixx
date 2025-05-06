@@ -23,8 +23,8 @@ import time
 import os
 
 
-import nltk
-from nltk.tokenize import TreebankWordTokenizer
+# import nltk  # dinonaktifkan
+# from nltk.tokenize import TreebankWordTokenizer  # dinonaktifkan
 
 # Pastikan path nltk_data lokal digunakan
 nltk.data.path.append('/mount/src/vhixx/nltk_data')
@@ -48,6 +48,7 @@ stop_words = set([
 ])
 
 df['text_StopWord'].apply(lambda x: word_tokenize(x, language='indonesian'))
+
 
 
 
