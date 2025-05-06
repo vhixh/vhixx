@@ -2,7 +2,7 @@ streamlit
 pandas
 numpy
 matplotlib
-nltk==3.6.3
+nltk>=3.6.3
 scikit-learn
 wordcloud
 google-play-scraper
