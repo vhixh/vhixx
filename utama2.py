@@ -25,7 +25,7 @@ from PIL import Image
 import time
 import os
 
-nltk.download()
+
 nltk.data.path.append('/to/nltk_data')
 #======================================================================================================
 
