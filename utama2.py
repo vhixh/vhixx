@@ -1,13 +1,8 @@
-
-
-# Inisialisasi tokenizer lokal
-# from nltk.tokenize import TreebankWordTokenizer  # dinonaktifkan
-# tokenizer = TreebankWordTokenizer()
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-# import nltk  # dinonaktifkan
+import nltk
 from streamlit_option_menu import option_menu
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -15,8 +10,8 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
 from wordcloud import WordCloud
 from google_play_scraper import reviews, Sort
-# # from nltk.corpus import stopwords  # dinonaktifkan  # Dinonaktifkan karena tidak digunakan lagi
-# from nltk.tokenize import TreebankWordTokenizer  # dinonaktifkan
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 from io import BytesIO
@@ -27,32 +22,8 @@ from PIL import Image
 import time
 import os
 
-
-# import nltk  # dinonaktifkan
-# from nltk.tokenize import TreebankWordTokenizer  # dinonaktifkan
-
-# Pastikan path nltk_data lokal digunakan
-nltk.data.path.append('/mount/src/vhixx/nltk_data')
-
-# Download resource jika belum tersedia
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt', download_dir='/mount/src/vhixx/nltk_data')
-    nltk.download('punkt_tab', download_dir='/mount/src/vhixx/nltk_data')
-    nltk.download('nonbreaking_prefixes', download_dir='/mount/src/vhixx/nltk_data')
-
-# Misalnya, untuk pemrosesan DataFrame
-# df['text_tokens'] = 
-# Daftar stopwords lokal Bahasa Indonesia
-stop_words = set([
-    "yang", "dan", "di", "ke", "dari", "ini", "itu", "dengan", "untuk", "pada",
-    "adalah", "sebagai", "juga", "karena", "oleh", "atau", "saat", "agar", "tidak",
-    "dalam", "sudah", "masih", "hanya", "saja", "akan", "bisa", "kami", "kita", "mereka",
-    "saya", "anda", "dia", "itu", "ini", "apa", "siapa", "dimana", "mengapa", "bagaimana"
-])
-
-df['text_StopWord'].apply(lambda x: word_tokenize(x, language='indonesian'))
+nltk.download('stopwords')
+nltk.download('punkt')
 
 
 
@@ -373,7 +344,7 @@ elif selected =="Analisis Data":
             df['text_StopWord'] = df['text_casefolding'].apply(
                 lambda x: ' '.join([word for word in x.split() if word not in stopwords_list])
             )
-            df['text_tokens'] = df['text_StopWord'].apply(lambda x: str(x).split())
+            df['text_tokens'] = df['text_StopWord'].apply(lambda x: word_tokenize(x))
 
             factory = StemmerFactory()
             stemmer = factory.create_stemmer()
@@ -571,7 +542,7 @@ elif selected =="Transportasi Online":
     """)
 
     # Path ke folder tempat file disimpan
-    folder_path = "D:/apps/data"
+    folder_path = "data"
 
     # Daftar file CSV di folder dengan placeholder
     files_available = ["⬜ Pilih File..."] + [f for f in os.listdir(folder_path) if f.endswith('.csv')]
@@ -613,7 +584,7 @@ elif selected =="Transportasi Online":
             df['text_StopWord'] = df['text_casefolding'].apply(
                 lambda x: ' '.join([word for word in x.split() if word not in stopwords_list])
             )
-            df['text_tokens'] = df['text_StopWord'].apply(lambda x: str(x).split())
+            df['text_tokens'] = df['text_StopWord'].apply(lambda x: word_tokenize(x))
 
             factory = StemmerFactory()
             stemmer = factory.create_stemmer()
