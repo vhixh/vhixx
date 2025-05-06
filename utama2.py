@@ -1,7 +1,4 @@
 import streamlit as st
-
-st.set_page_config(page_title="Aplikasi Analisis Sentimen Ulasan Pengguna Transportasi Online pada Google Play")
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,21 +22,22 @@ from PIL import Image
 import time
 import os
 
+
+# Cek apakah stopwords sudah diunduh
 import nltk
-from nltk.corpus import stopwords
+nltk.download('stopwords')
+nltk.download('punkt')
 
-# Tambahkan path untuk nltk_data lokal
-nltk.data.path.append('/mount/src/vhixx/nltk_data')
-
-# Unduh stopwords tanpa tampilan interaktif
-nltk.download('stopwords', download_dir='/mount/src/vhixx/nltk_data', quiet=True)
-
-# Coba ambil stopwords Bahasa Indonesia
+import nltk
 try:
-    stop_words = stopwords.words('indonesian')
-    print(f"Contoh stopwords Indonesia: {stop_words[:10]}")
+    nltk.data.find('tokenizers/punkt')
 except LookupError:
-    print("Stopwords Bahasa Indonesia belum tersedia.")
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
 #=====================================================================================================
 
 
@@ -614,132 +612,6 @@ elif selected =="Transportasi Online":
             st.write("### Analisis Sentimen")
             lexicon_positive = {}
             lexicon_negative = {}
-
-            # Load lexicon files
-            with open('lexicon_positive_ver1.csv', 'r') as csvfile:
-                reader = csv.reader(csvfile, delimiter=',')
-                for row in reader:
-                    lexicon_positive[row[0]] = int(row[1])
-
-            with open('lexicon_negative_ver1.csv', 'r') as csvfile:
-                reader = csv.reader(csvfile, delimiter=',')
-                for row in reader:
-                    lexicon_negative[row[0]] = int(row[1])
-
-            def sentiment_analysis_lexicon_indonesia(text):
-                score = 0
-                for word_pos in text:
-                    if word_pos in lexicon_positive:
-                        score += lexicon_positive[word_pos]
-                for word_neg in text:
-                    if word_neg in lexicon_negative:
-                        score += lexicon_negative[word_neg]
-                polarity = 'positif' if score > 0 else 'negatif' if score < 0 else 'netral'
-                return score, polarity
-
-            # Apply sentiment analysis
-            results = df['text_tokens'].apply(sentiment_analysis_lexicon_indonesia)
-            results = list(zip(*results))
-            df['polarity_score'] = results[0]
-            df['polarity'] = results[1]
-
-            st.write("Hasil Sentimen")
-            st.write(df['polarity'].value_counts())
-            st.write(df)
-
-            # Simpan hasil ke session state agar bisa diunduh tanpa reset
-            st.session_state.processed_df = df
-
-            # Fitur unduhan untuk CSV
-            csv = df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="Unduh Hasil Analisis CSV",
-                data=csv,
-                file_name="ulasan_google_play.csv",
-                mime="text/csv"
-            )
-
-            # Fitur unduhan untuk Excel
-            excel_buffer = BytesIO()
-            df.to_excel(excel_buffer, index=False, engine='xlsxwriter')
-            st.download_button(
-                label="Unduh Hasil Analisis Excel",
-                data=excel_buffer.getvalue(),
-                file_name="ulasan_google_play.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
-
-            # Modeling SVM
-            st.write("-----------------------------------------------------------------------------")
-            st.write("### Evaluasi Model SVM")
-            X_train, X_test, y_train, y_test = train_test_split(df['text_steamengl'], df['polarity'], test_size=0.2, random_state=0)
-
-            tfidf_vectorizer = TfidfVectorizer()
-            tfidf_train = tfidf_vectorizer.fit_transform(X_train)
-            tfidf_test = tfidf_vectorizer.transform(X_test)
-
-            svm = SVC(kernel='linear')
-            svm.fit(tfidf_train, y_train)
-            y_pred = svm.predict(tfidf_test)
-
-            accuracy = accuracy_score(y_test, y_pred)
-            precision = precision_score(y_test, y_pred, average="weighted")
-            recall = recall_score(y_test, y_pred, average="weighted")
-            f1 = f1_score(y_test, y_pred, average="weighted")
-
-            st.write("SVM Accuracy:", accuracy)
-            st.write("SVM Precision:", precision)
-            st.write("SVM Recall:", recall)
-            st.write("SVM F1 Score:", f1)
-
-            st.text(f'Confusion Matrix:\n {confusion_matrix(y_test, y_pred)}')
-            st.code('Model Report:\n ' + classification_report(y_test, y_pred, zero_division=0))
-
-            # Visualisasi Data
-            st.write("-----------------------------------------------------------------------------")
-            st.write("### Visualisasi Data Sentimen")
-
-            positif_count = df[df['polarity'] == 'positif'].shape[0]
-            negatif_count = df[df['polarity'] == 'negatif'].shape[0]
-            netral_count = df[df['polarity'] == 'netral'].shape[0]
-
-            labels = ['positif', 'negatif', 'netral']
-            sizes = [positif_count, negatif_count, netral_count]
-            colors = ['#66bb6a', '#ef5350', '#fffd80']
-
-            fig, ax = plt.subplots()
-            ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-            ax.axis('equal')
-            st.pyplot(fig)
-
-            st.write("-----------------------------------------------------------------------------")
-            st.write("Word Cloud untuk Setiap Sentimen")
-
-            def generate_wordcloud(data, title, color):
-                text = ' '.join(data)
-                if text:
-                    wordcloud = WordCloud(width=800, height=400, background_color='black').generate(text)
-                    fig, ax = plt.subplots(figsize=(10, 6))
-                    ax.imshow(wordcloud, interpolation='bilinear')
-                    ax.axis('off')
-                    plt.title(title, color=color)
-                    st.pyplot(fig)
-                else:
-                    st.write(f"Data untuk {title} kosong, tidak dapat membuat Word Cloud.")
-
-            generate_wordcloud(df[df['polarity'] == 'positif']['text_steamengl'], "Sentimen Positif", "green")
-            generate_wordcloud(df[df['polarity'] == 'negatif']['text_steamengl'], "Sentimen Negatif", "red")
-            generate_wordcloud(df[df['polarity'] == 'netral']['text_steamengl'], "Sentimen Netral", "gray")
-
-            # Tombol reset halaman total (hapus file + status analisis)
-            if st.button("Reset Halaman"):
-                for key in ["analysis_started", "selected_file", "processed_df"]:
-                    if key in st.session_state:
-                        del st.session_state[key]
-                st.rerun()
-
-    else:
-        st.info("Silakan pilih file untuk memulai analisis dan visualisasi.")
 
             # Load lexicon files
             with open('lexicon_positive_ver1.csv', 'r') as csvfile:
