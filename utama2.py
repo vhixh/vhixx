@@ -47,7 +47,6 @@ stop_words = set([
     "saya", "anda", "dia", "itu", "ini", "apa", "siapa", "dimana", "mengapa", "bagaimana"
 ])
 
-df['text_StopWord'].apply(lambda x: word_tokenize(x, language='indonesian'))
 
 
 
