@@ -25,7 +25,10 @@ from PIL import Image
 import time
 import os
 
+import nltk
 
+# Tambahkan path lokal
+nltk.data.path.append('/mount/src/vhixx/nltk_data')
 #======================================================================================================
 
 st.markdown("""
