@@ -39,7 +39,8 @@ try:
 except LookupError:
     nltk.download('stopwords')
 #=====================================================================================================
-
+nltk.download('punkt', download_dir='/mount/src/vhixx/nltk_data')
+nltk.data.path.append('/mount/src/vhixx/nltk_data')
 
 
 
