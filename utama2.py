@@ -25,22 +25,21 @@ from PIL import Image
 import time
 import os
 
-
-# Cek apakah stopwords sudah diunduh
 import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
+from nltk.corpus import stopwords
 
-import nltk
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
+# Tambahkan path untuk nltk_data lokal
+nltk.data.path.append('/mount/src/vhixx/nltk_data')
 
+# Unduh stopwords tanpa tampilan interaktif
+nltk.download('stopwords', download_dir='/mount/src/vhixx/nltk_data', quiet=True)
+
+# Coba ambil stopwords Bahasa Indonesia
 try:
-    nltk.data.find('corpora/stopwords')
+    stop_words = stopwords.words('indonesian')
+    print(f"Contoh stopwords Indonesia: {stop_words[:10]}")
 except LookupError:
-    nltk.download('stopwords')
+    print("Stopwords Bahasa Indonesia belum tersedia.")
 #=====================================================================================================
 
 
