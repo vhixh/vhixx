@@ -107,7 +107,7 @@ if selected =='Home':
 
         with col1:
             # Menampilkan gambar
-            image_path = "/transportasi.webp"  # Pastikan path benar
+            image_path = "transportasi.webp"  # Pastikan path benar
             st.image(
                 image_path, 
                 caption="Ilustrasi Transportasi Online", 
