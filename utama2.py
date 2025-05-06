@@ -25,11 +25,26 @@ from PIL import Image
 import time
 import os
 
-import nltk
 
-# Tambahkan path lokal
-nltk.data.path.append('/mount/src/vhixx/nltk_data')
-#======================================================================================================
+# Cek apakah stopwords sudah diunduh
+import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
+
+import nltk
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
+#=====================================================================================================
+
+
+
 
 st.markdown("""
     <style>
@@ -88,14 +103,14 @@ if selected =='Home':
 
     def home_page():
    
-        st.image("11.png", use_container_width=True)
+        st.image("D:/apps/11.png", use_container_width=True)
 
         # Membuat tata letak dua kolom
         col1, col2 = st.columns([1, 2])
 
         with col1:
             # Menampilkan gambar
-            image_path = "transportasi.webp"  # Pastikan path benar
+            image_path = "D:/apps/transportasi.webp"  # Pastikan path benar
             st.image(
                 image_path, 
                 caption="Ilustrasi Transportasi Online", 
@@ -166,7 +181,7 @@ if selected =='Home':
 elif selected =="Scraping Data":
 
     # Judul aplikasi
-    st.image("22.png", use_container_width=True)
+    st.image("D:/apps/22.png", use_container_width=True)
 
     # Penjelasan fitur scraping
     st.subheader("Langkah-Langkah Scraping Ulasan")
@@ -304,7 +319,7 @@ elif selected =="Analisis Data":
     if "analysis_started" not in st.session_state:
         st.session_state.analysis_started = False
 
-    st.image("33.png", use_container_width=True)
+    st.image("D:/apps/33.png", use_container_width=True)
 
     # Langkah-langkah Analisis
     st.markdown("""
@@ -348,7 +363,7 @@ elif selected =="Analisis Data":
             df['text_StopWord'] = df['text_casefolding'].apply(
                 lambda x: ' '.join([word for word in x.split() if word not in stopwords_list])
             )
-            df['text_tokens'] = df['text_StopWord'].apply(lambda x: word_tokenize(str(x)))
+            df['text_tokens'] = df['text_StopWord'].apply(lambda x: word_tokenize(x))
 
             factory = StemmerFactory()
             stemmer = factory.create_stemmer()
@@ -453,7 +468,7 @@ elif selected =="Analisis Data":
 elif selected =="Visualisasi Data":
 
     # Judul aplikasi
-    st.image("44.png", use_container_width=True)
+    st.image("D:/apps/44.png", use_container_width=True)
 
     # Jika belum ada di session state, set default
     if "visualization_started" not in st.session_state:
@@ -534,7 +549,7 @@ elif selected =="Transportasi Online":
         st.session_state.analysis_started = False
 
     # Judul aplikasi
-    st.image("55.png", use_container_width=True)
+    st.image("D:/apps/55.png", use_container_width=True)
 
     st.markdown("""
     ### **Langkah-Langkah Analisis dan Visualisasi Data Ulasan**
@@ -546,16 +561,16 @@ elif selected =="Transportasi Online":
     """)
 
     # Path ke folder tempat file disimpan
-    folder_path = "data/"
+    folder_path = "D:/apps/data"
 
     # Daftar file CSV di folder dengan placeholder
-    files_available = ["Pilih File..."] + [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+    files_available = ["⬜ Pilih File..."] + [f for f in os.listdir(folder_path) if f.endswith('.csv')]
 
     # Pilih file untuk dianalisis
     selected_file = st.selectbox("Pilih file untuk dianalisis:", files_available)
 
     # Validasi jika pengguna belum memilih file
-    if selected_file != "Pilih File...":
+    if selected_file != "⬜ Pilih File...":
         st.session_state.selected_file = selected_file  # simpan file ke session state
 
     if "selected_file" in st.session_state and st.session_state.selected_file != "⬜ Pilih File...":
@@ -600,6 +615,132 @@ elif selected =="Transportasi Online":
             st.write("### Analisis Sentimen")
             lexicon_positive = {}
             lexicon_negative = {}
+
+            # Load lexicon files
+            with open('lexicon_positive_ver1.csv', 'r') as csvfile:
+                reader = csv.reader(csvfile, delimiter=',')
+                for row in reader:
+                    lexicon_positive[row[0]] = int(row[1])
+
+            with open('lexicon_negative_ver1.csv', 'r') as csvfile:
+                reader = csv.reader(csvfile, delimiter=',')
+                for row in reader:
+                    lexicon_negative[row[0]] = int(row[1])
+
+            def sentiment_analysis_lexicon_indonesia(text):
+                score = 0
+                for word_pos in text:
+                    if word_pos in lexicon_positive:
+                        score += lexicon_positive[word_pos]
+                for word_neg in text:
+                    if word_neg in lexicon_negative:
+                        score += lexicon_negative[word_neg]
+                polarity = 'positif' if score > 0 else 'negatif' if score < 0 else 'netral'
+                return score, polarity
+
+            # Apply sentiment analysis
+            results = df['text_tokens'].apply(sentiment_analysis_lexicon_indonesia)
+            results = list(zip(*results))
+            df['polarity_score'] = results[0]
+            df['polarity'] = results[1]
+
+            st.write("Hasil Sentimen")
+            st.write(df['polarity'].value_counts())
+            st.write(df)
+
+            # Simpan hasil ke session state agar bisa diunduh tanpa reset
+            st.session_state.processed_df = df
+
+            # Fitur unduhan untuk CSV
+            csv = df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="Unduh Hasil Analisis CSV",
+                data=csv,
+                file_name="ulasan_google_play.csv",
+                mime="text/csv"
+            )
+
+            # Fitur unduhan untuk Excel
+            excel_buffer = BytesIO()
+            df.to_excel(excel_buffer, index=False, engine='xlsxwriter')
+            st.download_button(
+                label="Unduh Hasil Analisis Excel",
+                data=excel_buffer.getvalue(),
+                file_name="ulasan_google_play.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+
+            # Modeling SVM
+            st.write("-----------------------------------------------------------------------------")
+            st.write("### Evaluasi Model SVM")
+            X_train, X_test, y_train, y_test = train_test_split(df['text_steamengl'], df['polarity'], test_size=0.2, random_state=0)
+
+            tfidf_vectorizer = TfidfVectorizer()
+            tfidf_train = tfidf_vectorizer.fit_transform(X_train)
+            tfidf_test = tfidf_vectorizer.transform(X_test)
+
+            svm = SVC(kernel='linear')
+            svm.fit(tfidf_train, y_train)
+            y_pred = svm.predict(tfidf_test)
+
+            accuracy = accuracy_score(y_test, y_pred)
+            precision = precision_score(y_test, y_pred, average="weighted")
+            recall = recall_score(y_test, y_pred, average="weighted")
+            f1 = f1_score(y_test, y_pred, average="weighted")
+
+            st.write("SVM Accuracy:", accuracy)
+            st.write("SVM Precision:", precision)
+            st.write("SVM Recall:", recall)
+            st.write("SVM F1 Score:", f1)
+
+            st.text(f'Confusion Matrix:\n {confusion_matrix(y_test, y_pred)}')
+            st.code('Model Report:\n ' + classification_report(y_test, y_pred, zero_division=0))
+
+            # Visualisasi Data
+            st.write("-----------------------------------------------------------------------------")
+            st.write("### Visualisasi Data Sentimen")
+
+            positif_count = df[df['polarity'] == 'positif'].shape[0]
+            negatif_count = df[df['polarity'] == 'negatif'].shape[0]
+            netral_count = df[df['polarity'] == 'netral'].shape[0]
+
+            labels = ['positif', 'negatif', 'netral']
+            sizes = [positif_count, negatif_count, netral_count]
+            colors = ['#66bb6a', '#ef5350', '#fffd80']
+
+            fig, ax = plt.subplots()
+            ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
+            ax.axis('equal')
+            st.pyplot(fig)
+
+            st.write("-----------------------------------------------------------------------------")
+            st.write("Word Cloud untuk Setiap Sentimen")
+
+            def generate_wordcloud(data, title, color):
+                text = ' '.join(data)
+                if text:
+                    wordcloud = WordCloud(width=800, height=400, background_color='black').generate(text)
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    ax.imshow(wordcloud, interpolation='bilinear')
+                    ax.axis('off')
+                    plt.title(title, color=color)
+                    st.pyplot(fig)
+                else:
+                    st.write(f"Data untuk {title} kosong, tidak dapat membuat Word Cloud.")
+
+            generate_wordcloud(df[df['polarity'] == 'positif']['text_steamengl'], "Sentimen Positif", "green")
+            generate_wordcloud(df[df['polarity'] == 'negatif']['text_steamengl'], "Sentimen Negatif", "red")
+            generate_wordcloud(df[df['polarity'] == 'netral']['text_steamengl'], "Sentimen Netral", "gray")
+
+            # Tombol reset halaman total (hapus file + status analisis)
+            if st.button("Reset Halaman"):
+                for key in ["analysis_started", "selected_file", "processed_df"]:
+                    if key in st.session_state:
+                        del st.session_state[key]
+                st.rerun()
+
+    else:
+        st.info("Silakan pilih file untuk memulai analisis dan visualisasi.")
 
             # Load lexicon files
             with open('lexicon_positive_ver1.csv', 'r') as csvfile:
