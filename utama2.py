@@ -25,7 +25,7 @@ import os
 nltk.download('stopwords')
 nltk.download('punkt')
 
-
+st.set_page_config(page_title="Aplikasi Analisis Sentimen Transportasi Online")
 
 st.markdown("""
     <style>
